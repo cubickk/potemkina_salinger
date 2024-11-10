@@ -2,11 +2,11 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 
-enum Typ { Nalozit, Nalozeno, Vylozit, PrijezdDoB, PrijezdDoA };
+enum Typ { Nalozit, Nalozeno, Vylozeno, PrijezdDoB, PrijezdDoA };
 
 public int pisekA;
 public int pisekB;
-int pisekcelkem;
+public int pisekMezi;
 public int cas;
 public int KdyNakladat;
 public int pocetAut = 4;
@@ -22,6 +22,28 @@ public void Planuj(Auto a, int k, Typ c)
 {
     kalendar.Enqueue(new Udalost(a, k, c), k);
 }
+public void Nalozit(Auto a)
+{
+    Planuj(a, a.dobaNakladani, Nalozeno);   
+}
+public void Nalozeno(Auto a)
+{
+    pisekA -= a.nosnost;
+    pisekMezi += a.nosnost;
+    Planuj(a, a.dobaJizdy, PrijezdDoB);
+}
+public void PrijezdDoB(Auto a)
+{
+    Planuj(a, a.dobaVykladani, Vylozeno)
+}
+public void Vylozeno(Auto a)
+{
+    pisekMezi -= a.nosnost;
+    pisekB += a.nosnost;
+    Planuj(a, a.dobaJizdy, PrijezdDoA);
+}
+
+    
 
 class Auto;
 {
